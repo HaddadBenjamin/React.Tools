@@ -1,0 +1,24 @@
+$xsWidth: 360px;
+$smWidth: 600px;
+$mdWidth: 1024px;
+$lgWidth: 1440px;
+
+@mixin below($maxWidth) { @media (max-width: $maxWidth) { @content; } }
+
+@mixin below-xs { @media (max-width: $xsWidth) { @content; } }
+
+@mixin below-sm { @media (max-width: $smWidth) { @content; } }
+
+@mixin below-md { @media (max-width: $mdWidth) { @content; } }
+
+@mixin below-lg { @media (max-width: $ldWidth) { @content; } }
+
+@mixin above($minWidth) { @media (min-width: $minWidth) { @content; } }
+
+@mixin above-xs { @media (min-width: $xs-width) { @content; } }
+
+@mixin above-sm { @media (min-width: $sm-width) { @content; } }
+
+@mixin above-md { @media (min-width: $md-width) { @content; } }
+
+@mixin above-lg { @media (min-width: $ldWidth) { @content; } }

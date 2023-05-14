@@ -1,0 +1,19 @@
+:root {
+  --duration: 1s;
+  --delay: 0ms;
+  --zoom: 0.8;
+}
+
+.zoom { animation: zoom var(--duration) var(--delay); }
+
+@keyframes zoom {
+  from {
+    opacity: 0%;
+    transform: scale(var(--zoom));
+  }
+
+  to {
+    opacity: 100%;
+    transform: scale(1);
+  }
+}

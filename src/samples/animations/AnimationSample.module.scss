@@ -1,0 +1,25 @@
+%base {
+  height: 400px;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-size: 30px;
+  padding-top: 100px;
+}
+
+.container {
+  display: flex;
+  gap: 24px;
+
+  .onVisible {
+    @extend %base;
+
+    background-color: blue;
+  }
+
+  .onVisibleFirstTime {
+    @extend %base;
+
+    background-color: green;
+  }
+}

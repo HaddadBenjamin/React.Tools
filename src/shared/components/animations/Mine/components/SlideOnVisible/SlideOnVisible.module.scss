@@ -1,0 +1,61 @@
+@import "../../hooks/useBaseAnimation.module";
+
+:root {
+  --duration: 1s;
+  --delay: 0ms;
+  --distance: 100%;
+}
+
+.slideContainer { overflow: hidden; }
+.slideUp { animation: slide-up var(--duration) var(--delay); }
+.slideRight { animation: slide-right var(--duration) var(--delay); }
+.slideDown { animation: slide-down var(--duration) var(--delay); }
+.slideLeft { animation: slide-left var(--duration) var(--delay); }
+
+@keyframes slide-up {
+  from {
+    opacity: 0%;
+    transform: translateY(var(--distance));
+  }
+
+  to {
+    opacity: 100%;
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slide-right {
+  from {
+    opacity: 0%;
+    transform: translateX(var(--distance));
+  }
+
+  to {
+    opacity: 100%;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0%;
+    transform: translateY(calc(-1 * var(--distance)));
+  }
+
+  to {
+    opacity: 100%;
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0%;
+    transform: translateX(calc(-1 * var(--distance)));
+  }
+
+  to {
+    opacity: 100%;
+    transform: translateX(0%);
+  }
+}

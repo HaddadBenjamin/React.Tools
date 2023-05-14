@@ -1,0 +1,14 @@
+// Tout le contenu de ce fichier doit être injecté uniquement à la build et non dans chaque modules.
+@import "./colors";
+@import "./spacings";
+@import "./texts";
+@import "./breakpoints";
+@import "./mixins";
+@import "./borders";
+@import "./sharedRules";
+@import "./animations";
+
+* { /* stylelint-disable-line */
+  font-smooth: always; /* stylelint-disable-line property-no-unknown */
+  /* stylelint-disable-line */
+}/* stylelint-disable-line no-missing-end-of-source-newline */

@@ -1,0 +1,25 @@
+@import "./breakpoints";
+@import "./mixins";
+
+// Ce sont les règles partagées à tout les domaines
+// Pour les  règles qui sont partagées uniquement à un domaine, il faut les mettre dans le domaine en question
+
+// box-sizing : border-box permet de ne pas prendre en compte
+// les margins, paddings, border lors du calcul de la hauteur ou de la largeur.
+// par défaut le choix pris par l'application était box-sizing : content-box ce qui ne les prend pas en compte.
+%border-box-container {
+  box-sizing: border-box;
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+%sub-container {
+  width: $mdWidth;
+  margin: auto;
+
+  @include below-md {
+    width: 100%;
+  }
+}

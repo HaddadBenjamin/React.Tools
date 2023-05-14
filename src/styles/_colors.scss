@@ -1,0 +1,57 @@
+/* stylelint-disable */
+$primaryColor: white;
+$secondaryColor: #f8813d;
+$tertiaryColor: #0a0a0a;
+$yellow: #fec844;
+$red: #d41717;
+$blue_light: #e5ecef;
+$blue_sky: #4796d8;
+$blue_gray: #496776;
+$blue_dark: #002c75;
+$green_light: #8ad489;
+$green_blue: #36a4a3;
+$green_dark: #3f986f;
+$gray_light: #f6f7f8;
+$gray_medium: #a7a7a7;
+$gray_dark: #3c3c3c;
+$white: #fff;
+$white_off: #eef0f1;
+$black: #262c2f;
+$colors: (
+  yellow: $yellow,
+  red: $red,
+  blue_light: $blue_light,
+  blue_sky: $blue_sky,
+  blue_gray: $blue_gray,
+  blue_dark: $blue_dark,
+  green_light: $green_light,
+  green_blue: $green_blue,
+  gray_light: $gray_light,
+  green_dark: $green_dark,
+  gray_medium: $gray_medium,
+  gray_dark: $gray_dark,
+  white: $white,
+  white_off: $white_off,
+  black: $black,
+);
+
+:export {
+  yellow: $yellow;
+  red: $red;
+  blue_light: $blue_light;
+  blue_sky: $blue_sky;
+  blue_gray: $blue_gray;
+  blue_dark: $blue_dark;
+  green_light: $green_light;
+  green_blue: $green_blue;
+  gray_light: $gray_light;
+  green_dark: $green_dark;
+  gray_medium: $gray_medium;
+  gray_dark: $gray_dark;
+  white: $white;
+  white_off: $white_off;
+  black: $black;
+}
+
+// $n100, $n200, ... 900 bleu foncé au noir
+// $i100 a 900 autre couleur, etc...

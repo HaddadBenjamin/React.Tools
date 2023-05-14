@@ -1,0 +1,17 @@
+@mixin fade-in($time-in-seconds : 0.5s) {
+  animation: fadein $time-in-seconds;
+
+  @keyframes fadein {
+    from { opacity: 0%; }
+    to { opacity: 100%; }
+  }
+}
+
+@mixin fade-out($time-in-seconds : 0.5s) {
+  animation: fadeout $time-in-seconds;
+
+  @keyframes fadeout {
+    from { opacity: 100%; }
+    to { opacity: 0%; }
+  }
+}

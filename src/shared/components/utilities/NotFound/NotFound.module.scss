@@ -1,0 +1,17 @@
+@import "src/styles/styles";
+
+.container {
+  width: 610px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 24px;
+
+  @include below-md {
+    width: 100%;
+    height: auto;
+    margin: 48px auto 24px;
+  }
+}

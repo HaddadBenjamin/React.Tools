@@ -1,0 +1,108 @@
+@mixin text(
+  $fontSize : undefined,
+  $primaryColor : undefined,
+  $fontWeight : undefined,
+  $textAlign : undefined,
+  $lineHeight : undefined) {
+  @if $fontSize != undefined { font-size: $fontSize; }
+
+  @if $primaryColor != undefined { color: $primaryColor; }
+
+  @if $textAlign != undefined { text-align: $textAlign; }
+
+  @if $lineHeight != undefined { line-height: $lineHeight; }
+
+  @if $fontWeight != undefined { font-weight: $fontWeight; }
+}
+
+@mixin flex(
+  $justifyContent : undefined,
+  $alignItems : undefined,
+  $flexDirection : undefined,
+  $gap : undefined,
+  $flexWrap : undefined) {
+  display: flex;
+
+  @if $justifyContent != undefined { justify-content: $justifyContent; }
+
+  @if $alignItems != undefined { align-items: $alignItems; }
+
+  @if $flexDirection != undefined { flex-direction: $flexDirection; }
+
+  @if $gap != undefined { gap: $gap; }
+
+  @if $flexWrap!= undefined { flex-wrap: $flexWrap; }
+}
+
+@mixin grid(
+  $gridTemplateColumns : undefined,
+  $gridTemplateRows : undefined,
+  $justifyItems: undefined,
+  $alignItems: undefined,
+  $gridGap: undefined) {
+  display: grid;
+
+  @if $gridTemplateColumns != undefined { grid-template-columns: $gridTemplateColumns; }
+
+  @if $gridTemplateRows != undefined { grid-template-rows: $gridTemplateRows; }
+
+  @if $justifyItems != undefined { justify-items: $justifyItems; }
+
+  @if $alignItems != undefined { align-items: $alignItems; }
+
+  @if $gridGap != undefined { gap: $gridGap; }
+}
+
+@mixin grid-element(
+  $gridColumn : undefined,
+  $gridRow : undefined,
+  $justifySelf: undefined,
+  $alignSelf: undefined) {
+  display: grid;
+
+  @if $gridColumn != undefined { grid-column: $gridColumn; }
+
+  @if $gridRow != undefined { grid-row: $gridRow; }
+
+  @if $justifySelf != undefined { justify-self: $justifySelf; }
+
+  @if $alignSelf != undefined { align-self: $alignSelf; }
+}
+
+@mixin width-height($width : undefined, $height : undefined) {
+  @if $width != undefined { width: $width; }
+
+  @if $height != undefined { height: $height; }
+}
+
+@mixin border-and-radius($border: undefined, $radius : undefined) {
+  @if $border != undefined { border: $border; }
+
+  @if $radius != undefined { border-radius: $radius; }
+}
+
+@mixin margin-padding($marginAuto: undefined, $padding: undefined) {
+  @if $marginAuto != undefined { margin: $marginAuto; }
+
+  @if $padding != undefined { padding: $padding; }
+}
+
+@mixin scale-withou-modify-width($scale : 0.9, $widthPercent : 100%) {
+  transform: scale($scale);
+  width: 1 / $scale * $widthPercent;
+  margin-left: ($widthPercent - (1 / $scale) * $widthPercent) / 2;
+}
+
+%wave {
+  background-color: red;
+  width: 100%;
+  height: 86px;
+  border-radius: 50% / 100%;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+@mixin square($size) {
+  width: $size;
+  height: $size;
+}

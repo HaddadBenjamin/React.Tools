@@ -1,0 +1,59 @@
+@import "../../hooks/useBaseAnimation.module";
+
+:root {
+  --duration: 1s;
+  --delay: 0ms;
+  --distance: 100%;
+  --background-color: green;
+}
+
+%reveal { position: relative; }
+
+.revealUp,
+.revealRight,
+.revealDown,
+.revealLeft { @extend %reveal; }
+
+%reveal-after {
+  content: "";
+  position: absolute;
+  background-color: var(--background-color);
+}
+
+.revealUp::after {
+  @extend %reveal-after;
+
+  inset: 0 0 auto 0;
+  animation: reveal-up-or-down var(--duration) var(--delay);
+}
+
+.revealRight::after {
+  @extend %reveal-after;
+
+  inset: 0 0 0 auto;
+  animation: reveal-right-or-left var(--duration)  var(--delay);
+}
+
+.revealDown::after {
+  @extend %reveal-after;
+
+  inset: auto 0 0 0;
+  animation: reveal-up-or-down var(--duration) var(--delay);
+}
+
+.revealLeft::after {
+  @extend %reveal-after;
+
+  inset: 0 auto 0 0;
+  animation: reveal-right-or-left var(--duration) var(--delay);
+}
+
+@keyframes reveal-up-or-down {
+  from { height: var(--distance); }
+  to { height: 0%; }
+}
+
+@keyframes reveal-right-or-left {
+  from { width: var(--distance); }
+  to { width: 0%; }
+}

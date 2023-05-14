@@ -1,0 +1,24 @@
+.title {
+  animation: animated-title 1s linear;
+}
+
+@keyframes animated-title {
+  from {
+    transform: translateY(15px);
+    opacity: 0%;
+  }
+
+  to {
+    opacity: 100%;
+    transform: translateY(0);
+  }
+}
+
+.animatedTitle {
+  opacity: 100%;
+  transform: translateY(0);
+}
+
+.red {
+  color: red;
+}

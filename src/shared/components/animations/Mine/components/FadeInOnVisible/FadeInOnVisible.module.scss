@@ -1,0 +1,13 @@
+@import "../../hooks/useBaseAnimation.module";
+
+:root {
+  --duration: 2s;
+  --delay: 0ms;
+}
+
+.fadeIn { animation: fade-in var(--duration) var(--delay); }
+
+@keyframes fade-in {
+  from { opacity: 0%; }
+  to { opacity: 100%; }
+}
