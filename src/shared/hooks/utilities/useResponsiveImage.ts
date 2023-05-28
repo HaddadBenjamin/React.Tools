@@ -1,4 +1,4 @@
-import { ResponsiveImageData } from '../../domains/image/responsiveImage/responsiveImage.models';
+import { ResponsiveImageData } from '../../../domains/image/responsiveImage/responsiveImage.models';
 
 interface IUseResponsiveImageResponse {
   src : string,

@@ -1,4 +1,4 @@
-import { LazyImageData } from '../../shared/domains/lazyLoad/lazyImage/lazyImage.model';
+import { LazyImageData } from '../../domains/lazyLoad/lazyImage/lazyImage.model';
 
 const lazyImageDatas: LazyImageData[] = [
   {

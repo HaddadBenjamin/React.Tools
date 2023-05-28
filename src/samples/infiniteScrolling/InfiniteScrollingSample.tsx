@@ -1,5 +1,5 @@
 import React from 'react';
-import useInfiniteScrolling from '../../shared/domains/lazyLoad/infiniteScrolling/hooks/useInfiniteScrolling';
+import useInfiniteScrolling from '../../domains/lazyLoad/infiniteScrolling/hooks/useInfiniteScrolling';
 
 // Pour pouvoir faire de l'infinite scrolling, il faut que votre endpoint en GET gère la pagination.
 const InfiniteScrollingSample = () => {

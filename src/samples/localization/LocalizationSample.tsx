@@ -5,7 +5,7 @@ import i18next from 'i18next';
 import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import translationKeys from './translationKeys';
-import { getLocalizedString } from '../../shared/domains/localization/server/api';
+import { getLocalizedString } from '../../domains/localization/server/api';
 
 const LocalizationSample: FC = () => {
   const [currentLanguage, setCurrentLanguage] = useState(i18next.languages[0]);

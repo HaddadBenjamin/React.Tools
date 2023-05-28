@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import selectFeatureFlagsState from '../../domains/featureFlag/featureFlag.selector';
+import selectFeatureFlagsState from '../../../domains/featureFlag/featureFlag.selector';
 import useLazyReducer from '../performance/useLazyReducer';
 import {
   featureFlagReducerKey,
   featureFlagSagaKey,
-} from '../../domains/featureFlag/featureFlag.configuration';
+} from '../../../domains/featureFlag/featureFlag.configuration';
 import useLazySaga from '../performance/useLazySaga';
-import { getFeatureFlagsAction } from '../../domains/featureFlag/featureFlag.action';
-import { FeatureFlag } from '../../domains/featureFlag/featureFlag.model';
+import { getFeatureFlagsAction } from '../../../domains/featureFlag/featureFlag.action';
+import { FeatureFlag } from '../../../domains/featureFlag/featureFlag.model';
 
 export default (...featureFlagsIds: number[]): boolean[] => {
   const featureFlagsState = useSelector(selectFeatureFlagsState);

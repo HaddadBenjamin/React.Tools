@@ -2,14 +2,14 @@ import React, { ChangeEvent, FC } from 'react';
 import { useDispatch } from 'react-redux';
 import selectPaginateResponse from './ids.selector';
 import PaginationFilters
-  from '../../../shared/domains/lazyLoad/lazyPagination/components/PaginationFilters/PaginationFilters';
+  from '../../../domains/lazyLoad/lazyPagination/components/PaginationFilters/PaginationFilters';
 import IdsList from './components/IdList/IdsList';
 import PaginationButtons
-  from '../../../shared/domains/lazyLoad/lazyPagination/components/PagnationButtons/PaginationButtons';
-import usePagination from '../../../shared/domains/lazyLoad/lazyPagination/hooks/usePagination';
+  from '../../../domains/lazyLoad/lazyPagination/components/PagnationButtons/PaginationButtons';
+import usePagination from '../../../domains/lazyLoad/lazyPagination/hooks/usePagination';
 import { getPaginateIdsRequestAction } from './ids.action';
 import PaginationInformation
-  from '../../../shared/domains/lazyLoad/lazyPagination/components/PaginationInformation/PaginationInformation';
+  from '../../../domains/lazyLoad/lazyPagination/components/PaginationInformation/PaginationInformation';
 
 const LazyPaginationSample: FC = () => {
   const dispatch = useDispatch();

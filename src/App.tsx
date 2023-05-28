@@ -8,7 +8,7 @@ import LazyImageSample from './samples/lazyImage/LazyImageSample';
 import HightlightSample from './samples/ui/highlight/HightlightSample';
 import LazyResponsiveImageSample from './samples/lazyResponsiveImage/LazyResponsiveImageSample';
 import ResponsiveImageSample from './samples/responsiveImage/ResponsiveImageSample';
-import LazyReduxSample from './samples/lazyRedux/LazyReduxSample';
+// import LazyReduxSample from './samples/lazyRedux/LazyReduxSample';
 import BreakpointsSample from './samples/breakpoints/BreakpointsSample';
 import ResponsiveNavigationSample
   from './samples/ui/responsiveNavigation/ResponsiveNavigationSample/ResponsiveNavigationSample';
@@ -60,7 +60,7 @@ export default () => (
       <AnimationSample />
       <SimplePaginationSample />
       <LazyPaginationSample />
-      <LazyReduxSample />
+      { /* <LazyReduxSample /> */ }
       <LazyComponentSample />
       <LazyImageSample />
       <LazyResponsiveImageSample />

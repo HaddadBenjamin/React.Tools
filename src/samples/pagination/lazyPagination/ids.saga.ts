@@ -11,8 +11,8 @@ import {
 import {
   getIds,
   getPaginateIds,
-} from '../../../shared/domains/lazyLoad/lazyPagination/pagination.api';
-import { IPaginateResponse } from '../../../shared/domains/lazyLoad/lazyPagination/pagination.model';
+} from '../../../domains/lazyLoad/lazyPagination/pagination.api';
+import { IPaginateResponse } from '../../../domains/lazyLoad/lazyPagination/pagination.model';
 
 export function* getIdsSaga() {
   try {

@@ -1,6 +1,6 @@
 import React from 'react';
 import responsiveImageDatasMock from './responsiveImage.mock';
-import ResponsiveImage from '../../shared/domains/image/responsiveImage/components/reponsiveImage';
+import ResponsiveImage from '../../domains/image/responsiveImage/components/reponsiveImage';
 
 const ResponsiveImageSample = () => (
   <div>

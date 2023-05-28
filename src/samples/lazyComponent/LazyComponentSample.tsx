@@ -1,5 +1,5 @@
 import React from 'react';
-import LazyComponent from '../../shared/domains/lazyLoad/lazyComponent/components/LazyComponent';
+import LazyComponent from '../../domains/lazyLoad/lazyComponent/components/LazyComponent';
 
 const LazyLoadedComponent = React.lazy(() => import('./LazyComponentExample'));
 const LazyComponentSample = () => (

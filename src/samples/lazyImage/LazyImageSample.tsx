@@ -1,6 +1,6 @@
 import React from 'react';
 import lazyImageDatas from './lazyImage.mock';
-import LazyImage from '../../shared/domains/lazyLoad/lazyImage/components/LazyImage';
+import LazyImage from '../../domains/lazyLoad/lazyImage/components/LazyImage';
 
 const LazyImageSample = () => (
   <div>

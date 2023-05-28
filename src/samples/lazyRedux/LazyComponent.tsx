@@ -6,9 +6,9 @@ import { fakeDomainReducerKey } from './fakeDomain.reducer';
 import { getMessageRequestAction } from './fakeDomain.action';
 import selectMessage from './fakeDomain.selector';
 import { fakeDomainSagaKey } from './fakeDomain.saga';
-import useFeatureFlags from '../../shared/domains/featureFlag/hooks/useFeatureFlags';
+import useFeatureFlags from '../../domains/featureFlag/hooks/useFeatureFlags';
 import { AbTestIds, FeatureFlagIds } from './fakeDomain.configuration';
-import useAbTests from '../../shared/domains/abTest/hooks/useAbTests';
+import useAbTests from '../../domains/abTest/hooks/useAbTests';
 
 const LazyComponent = () => {
   const dispatch = useDispatch();

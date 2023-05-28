@@ -1,4 +1,4 @@
-import { ResponsiveImageData } from '../../shared/domains/image/responsiveImage/responsiveImage.models';
+import { ResponsiveImageData } from '../../domains/image/responsiveImage/responsiveImage.models';
 
 const responsiveImageDatasMock: ResponsiveImageData[] = [
   {

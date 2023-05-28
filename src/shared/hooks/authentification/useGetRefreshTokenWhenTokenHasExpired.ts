@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useAuthentification from './useAuthentification';
-import { getRefreshTokenThunk } from '../../domains/authentification/authentification.thunk';
+import { getRefreshTokenThunk } from '../../../domains/authentification/authentification.thunk';
 
 const useGetRefreshTokenWhenTokenHasExpired = () => {
   const { jwtToken, parsedAccessToken } = useAuthentification();

@@ -1,4 +1,4 @@
-import { IPaginateResponse } from '../../../shared/domains/lazyLoad/lazyPagination/pagination.model';
+import { IPaginateResponse } from '../../../domains/lazyLoad/lazyPagination/pagination.model';
 
 export enum IdAction {
   GET_IDS_REQUEST = 'ids/GET_IDS_REQUEST',

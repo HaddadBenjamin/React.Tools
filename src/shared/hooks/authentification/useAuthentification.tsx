@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import IAuthentificationState, { authentificationInitialState } from '../../domains/authentification/authentification.state';
-import selectAuthentification from '../../domains/authentification/authentification.selector';
+import IAuthentificationState, { authentificationInitialState } from '../../../domains/authentification/authentification.state';
+import selectAuthentification from '../../../domains/authentification/authentification.selector';
 import useSharedLocalStorage from '../state/useSharedLocalStorage';
 
 const useAuthentification = () : IAuthentificationState => {

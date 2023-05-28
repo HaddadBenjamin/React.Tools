@@ -1,4 +1,4 @@
-import LazyStore from '../../shared/domains/redux/lazyRedux/lazyRedux.store';
+import LazyStore from '../../domains/redux/lazyRedux/lazyRedux.store';
 import { initialApplicationState } from './root.state';
 import defaultReducers from './root.reducer';
 import middlewares from './root.middleware';

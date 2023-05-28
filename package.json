@@ -2,6 +2,9 @@
   "name": "lazyload",
   "version": "0.1.0",
   "private": true,
+  "browser":{
+    "child_process": false
+  },
   "scripts": {
     "dev": "concurrently \"yarn dev:react\" \"yarn dev:apiMock\"",
     "dev:react": "react-scripts start",

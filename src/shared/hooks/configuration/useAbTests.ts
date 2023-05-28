@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import selectAbTestsState from '../../domains/abTest/abTest.selector';
+import selectAbTestsState from '../../../domains/abTest/abTest.selector';
 import useLazyReducer from '../performance/useLazyReducer';
 import {
   abTestReducerKey,
   abTestSagaKey,
-} from '../../domains/abTest/abTest.configuration';
+} from '../../../domains/abTest/abTest.configuration';
 import useLazySaga from '../performance/useLazySaga';
-import { getAbTestsAction } from '../../domains/abTest/abTest.action';
-import { AbTest } from '../../domains/abTest/abTest.model';
+import { getAbTestsAction } from '../../../domains/abTest/abTest.action';
+import { AbTest } from '../../../domains/abTest/abTest.model';
 
 export default (...abTestsIds: number[]): boolean[] => {
   const abTestsState = useSelector(selectAbTestsState);
