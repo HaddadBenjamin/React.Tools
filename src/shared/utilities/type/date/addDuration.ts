@@ -1,16 +1,22 @@
-/* eslint-disable no-restricted-syntax,@typescript-eslint/no-non-null-asserted-optional-chain,no-tabs,no-undef,@typescript-eslint/no-non-null-assertion */
-const durationMap : [string, number][] = ['years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'].map((k, i) => [k, i]);
-const durationStringToDurationIndex = (durationString: string) : number => durationMap.find(([key]) => key === durationString)?.[1]!;
-
 export interface IDuration {
-	years?: number
-	months?: number
-	days?: number
-	hours?: number
-	minutes?: number
-	seconds?: number
-	milliseconds?: number
+	years?: number;
+	months?: number;
+	days?: number;
+	hours?: number;
+	minutes?: number;
+	seconds?: number;
+	milliseconds?: number;
 }
+
+export const toDuration = (date: Date): IDuration => ({
+  years: date.getFullYear(),
+  months: date.getMonth(),
+  days: date.getDate(),
+  hours: date.getHours(),
+  minutes: date.getMinutes(),
+  seconds: date.getSeconds(),
+  milliseconds: date.getMilliseconds(),
+});
 
 // Exemple :
 // const future = addDuration(new Date(), {
@@ -18,14 +24,28 @@ export interface IDuration {
 //   days: 1,
 //   minutes: 3,
 // });
-const addDuration = (date : Date, duration: IDuration) => {
-  const dateDurations = [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()];
+// Fonction pour ajouter une durée à une date
+export const addDuration = (date: Date, {
+  years = 0, months = 0, days = 0, hours = 0, minutes = 0, seconds = 0, milliseconds = 0,
+}: IDuration): Date => new Date(
+  date.getFullYear() + years,
+  date.getMonth() + months,
+  date.getDate() + days,
+  date.getHours() + hours,
+  date.getMinutes() + minutes,
+  date.getSeconds() + seconds,
+  date.getMilliseconds() + milliseconds,
+);
 
-  for (const [key, value] of Object.entries(duration)) dateDurations[durationStringToDurationIndex(key)] += value;
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return new Date(...parts);
-};
-
-export default addDuration;
+// Fonction pour soustraire une durée d'une date
+export const subtractDuration = (date: Date, {
+  years = 0, months = 0, days = 0, hours = 0, minutes = 0, seconds = 0, milliseconds = 0,
+}: IDuration): Date => new Date(
+  date.getFullYear() - years,
+  date.getMonth() - months,
+  date.getDate() - days,
+  date.getHours() - hours,
+  date.getMinutes() - minutes,
+  date.getSeconds() - seconds,
+  date.getMilliseconds() - milliseconds,
+);
