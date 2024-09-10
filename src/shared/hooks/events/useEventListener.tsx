@@ -9,7 +9,6 @@ const useEventListener = <T extends HTMLElement>(
 
     return () => reference?.current?.removeEventListener(eventName, eventHandler);
   },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   [reference?.current]);
 };
 
