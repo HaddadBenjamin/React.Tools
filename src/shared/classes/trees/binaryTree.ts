@@ -23,8 +23,11 @@ class BinaryTree {
     );
   }
 
-  static toArray(root: BinaryTree | null, keepOrder = true): number[] {
-    if (keepOrder) {
+  static toArray = (
+    root: BinaryTree | null,
+    mode: 'preserveOrder' | 'fast' = 'fast'
+  ): number[] => {
+    if (mode === 'preserveOrder') {
       if (!root) return [];
       const queue: (BinaryTree | null)[] = [root];
       const result: number[] = [];
@@ -40,18 +43,19 @@ class BinaryTree {
       return result;
     }
 
-    if (root?.val === null || root?.val === undefined) return [];
+    // Mode 'fast' : Parcours en profondeur (DFS) pré-ordre
+    if (!root) return [];
     return [
       root.val,
       ...BinaryTree.toArray(root?.left),
       ...BinaryTree.toArray(root?.right)
     ];
-  }
+  };
 
-  static arrayToBinaryTree = (array: number[]): BinaryTree | null => {
+  static arrayToBinaryTree(array: number[]): BinaryTree | null {
     if (!array.length) return null;
 
-    const createTree = (index: number) => {
+    const createTree = (index: number): BinaryTree | null => {
       if (index >= array.length) return null;
 
       const node = new BinaryTree(array[index]);
@@ -62,7 +66,7 @@ class BinaryTree {
     };
 
     return createTree(0);
-  };
+  }
 
   static length(root: BinaryTree | null): number {
     if (root?.val === null || root?.val === undefined) return 0;
