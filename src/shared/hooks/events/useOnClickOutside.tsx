@@ -1,26 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { type MutableRefObject, type RefObject } from 'react';
+import useEventListener from './useEventListener';
 
-interface IUseOnClickOutsideParameters<THtmlElement> {
-  ref: React.MutableRefObject<THtmlElement>,
-  onClickOutside: () => void
-}
-const useOnClickOutside = <THtmlElement extends HTMLElement>(
-  {
-    ref,
-    onClickOutside,
-  } : IUseOnClickOutsideParameters<THtmlElement>) : void => {
-  useEffect(() => {
-    const onMouseDown = (event: MouseEvent): void => {
-      if (!ref.current || ref.current.contains(event.target as THtmlElement)) return;
+type UseOnClickOutsideParameters = {
+  onClickOutside: (event: Event) => void;
+  getInsideElements: () => Array<
+    Element | null | MutableRefObject<HTMLElement> | RefObject<HTMLElement>
+  >;
+};
 
-      onClickOutside();
-    };
+const useOnClickOutside = ({
+  onClickOutside,
+  getInsideElements,
+}: UseOnClickOutsideParameters): void => {
+  const onMouseDown = React.useCallback(
+    (event: Event): void => {
+      const target = event.target as Node;
+      const isInsideElements = getInsideElements().some((excludeElement) => (excludeElement instanceof Element
+        ? excludeElement.contains(target)
+        : excludeElement?.current?.contains(target)),
+      );
 
-    document.addEventListener('mousedown', onMouseDown);
+      if (!isInsideElements) onClickOutside(event);
+    },
+    [onClickOutside, getInsideElements],
+  );
 
-    return () => document.removeEventListener('mousedown', onMouseDown);
-  },
-  [ref, onClickOutside]);
+  useEventListener('mousedown', onMouseDown, document);
 };
 
 export default useOnClickOutside;

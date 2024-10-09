@@ -2,7 +2,7 @@ import React, {
   FC, lazy, MutableRefObject, ReactNode, useRef, useState,
 } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import useToggle from '../../../../shared/hooks/utilities/useToggle';
+import useBoolean from '../../../../shared/hooks/utilities/useBoolean';
 import useBreakpoints from '../../../../shared/hooks/styles/useBreakpoints';
 import styles from './ResponsiveNavigationSample.module.scss';
 import { INavigationElement } from '../responsiveNavigation.model';
@@ -23,15 +23,15 @@ const ResponsiveNavigationSample: FC = () => {
   const [navigationElements, setNavigationElements] = useState(
     initialNavigationElements,
   );
-  const [
-    mobileNavigationIsVisible,
-    toggleMobileNavigation,
-    setMobileNavigationIsVisible,
-  ] = useToggle(false);
+  const {
+    value: mobileNavigationIsVisible,
+    inverse: toggleMobileNavigation,
+    disable: hideMobileNavigation,
+  } = useBoolean(false);
   const { belowSm } = useBreakpoints();
 
   const componentReference = useRef() as MutableRefObject<HTMLElement>;
-  useOnClickOutside({ ref: componentReference, onClickOutside: () => setMobileNavigationIsVisible(false) });
+  useOnClickOutside({ getInsideElements: () => [componentReference], onClickOutside: hideMobileNavigation });
 
   const selectNavigationElement = (navigationElement: INavigationElement) => setNavigationElements(
     navigationElements.map((e) => ({

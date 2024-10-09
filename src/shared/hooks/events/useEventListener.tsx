@@ -1,15 +1,21 @@
-import { MutableRefObject, useEffect } from 'react';
+import { type MutableRefObject, useEffect } from 'react';
 
 const useEventListener = <T extends HTMLElement>(
-  eventName : string,
-  eventHandler : (event: Event) => void,
-  reference : MutableRefObject<T>) : void => {
+  eventName: string,
+  eventHandler: (event: Event) => void,
+  reference: MutableRefObject<T | null> | Document | Window,
+): void => {
   useEffect(() => {
-    reference?.current?.addEventListener(eventName, eventHandler);
+    const targetElement = reference instanceof Window || reference instanceof Document
+      ? reference
+      : reference.current;
 
-    return () => reference?.current?.removeEventListener(eventName, eventHandler);
-  },
-  [reference?.current]);
+    targetElement?.addEventListener(eventName, eventHandler);
+
+    return () => {
+      targetElement?.removeEventListener(eventName, eventHandler);
+    };
+  }, [eventName, eventHandler, reference]);
 };
 
 export default useEventListener;
