@@ -1,47 +1,47 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * Throttle: limite la fréquence de mise à jour d'une valeur même si elle change souvent.
+ * Throttle limits how often a function can be called over time,
+ * even if the value changes frequently.
  *
- * Ex :
- * const [value, setValue, throttledValue] = useThrottleState({
+ * Example:
+ * const [searchTerm, setSearchTerm] = useThrottleState({
  *   initialValue: '',
  *   delay: 500,
- *   onThrottledValueChange: val => fetch(...val)
+ *   onThrottle: () => axios.get(path, { searchTerm }).then(...)
  * });
  *
- * <input value={value} onChange={e => setValue(e.target.value)} />
+ * <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />;
  */
-type UseThrottleStateParams<T> = {
+type UseThrottleStateParameters<T> = {
   initialValue: T;
   delay?: number;
-  onThrottledValueChange?: (value: T) => void;
+  onThrottle?: () => void;
 };
 
 function useThrottleState<T>({
   initialValue,
   delay = 600,
-  onThrottledValueChange
-}: UseThrottleStateParams<T>): [T, (value: T) => void, T] {
+  onThrottle,
+}: UseThrottleStateParameters<T>): [T, (value: T) => void] {
   const [value, setValue] = useState<T>(initialValue);
-  const [throttledValue, setThrottledValue] = useState<T>(initialValue);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const throttlingRef = useRef(false);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
-    if (timeoutRef.current) return;
+    if (!throttlingRef.current) {
+      throttlingRef.current = true;
+      onThrottle?.();
 
-    timeoutRef.current = setTimeout(() => {
-      setThrottledValue(value);
-      onThrottledValueChange?.(value);
-      timeoutRef.current = null;
-    }, delay);
+      const timeoutId = setTimeout(() => {
+        throttlingRef.current = false;
+      }, delay);
 
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, [value, delay, onThrottledValueChange]);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [value, delay, onThrottle]);
 
-  return [value, setValue, throttledValue];
+  return [value, setValue];
 }
 
 export default useThrottleState;
