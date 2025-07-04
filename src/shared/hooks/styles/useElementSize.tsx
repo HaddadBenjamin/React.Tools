@@ -1,43 +1,57 @@
-import {
-  useEffect, useState, MutableRefObject, useRef,
-} from 'react';
-import useOnSSR from '../prerendering/useOnSSR';
+import { useEffect, useRef, useState, RefObject } from 'react';
 
-export interface ElementSize {
-  elementWidth: number;
-  elementHeight: number;
-}
+type ElementSize = {
+  width: number;
+  height: number;
+};
 
-interface useElementSizeResponse<T> {
-  elementSize : ElementSize,
-  elementReference : MutableRefObject<T>
-}
+type UseElementSizeParams = {
+  selector?: string;
+  ref?: RefObject<HTMLElement>;
+  onChange?: (parameters: ElementSize & { element: HTMLElement }) => void;
+};
 
-// Optimisation possible : passer en paramètre un throttleValue, valeur par défault = 300, mais créera une dépendance à Lodash.
-export default <T extends HTMLElement>(): useElementSizeResponse<T> => {
-  const [elementSize, setElementSize] = useState<ElementSize>({ elementWidth: 0, elementHeight: 0 });
-  const elementReference = useRef<T>() as MutableRefObject<T>;
+const useElementSize = ({
+  selector,
+  ref,
+  onChange
+}: UseElementSizeParams): ElementSize => {
+  const [size, setSize] = useState<ElementSize>({ width: 0, height: 0 });
+  const observerRef = useRef<ResizeObserver | null>(null);
 
-  const getElementSize = (): ElementSize => ({
-    elementWidth: elementReference?.current?.offsetWidth ?? 0,
-    elementHeight: elementReference?.current?.offsetHeight ?? 0,
-  });
-  const handleResize = () => setElementSize(getElementSize());
-
-  useOnSSR({ onSSR: () => setElementSize(getElementSize()) });
-
-  useEffect(() => { new ResizeObserver(handleResize).observe(elementReference?.current); }, []);
   useEffect(() => {
-    handleResize();
+    let element: HTMLElement | null = null;
 
-    // Fonctionne en SSR car le composant est monté à ce moment
-    window.addEventListener('resize', handleResize);
+    if (ref && ref.current) {
+      element = ref.current;
+    } else if (selector) {
+      element = document.querySelector<HTMLElement>(selector);
+    }
+
+    if (!element) {
+      console.warn('No element found for useElementSize');
+      return;
+    }
+
+    const updateSize = () => {
+      const newSize = {
+        width: element!.offsetWidth,
+        height: element!.offsetHeight
+      };
+      setSize(newSize);
+      onChange?.({ ...newSize, element });
+    };
+
+    observerRef.current = new ResizeObserver(updateSize);
+    observerRef.current.observe(element);
+    updateSize();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      observerRef.current?.disconnect();
     };
-    // eslint-disable-next-line
-  }, [elementReference?.current]);
+  }, [selector, ref, onChange]);
 
-  return { elementSize, elementReference };
+  return size;
 };
+
+export default useElementSize;
