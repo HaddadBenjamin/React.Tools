@@ -1,22 +1,31 @@
-const areDeeplyEquals = (a : any, b : any) : boolean => {
+const areDeeplyEquals = (
+  a: any,
+  b: any,
+  options?: {
+    keysToCheck?: string[];
+    keysToIgnore?: string[];
+  },
+): boolean => {
   if (a === b) return true;
 
-  if (a == null || b == null || typeof a !== 'object' || typeof b !== 'object') return a === b;
+  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false;
 
-  const ctor1 = a.constructor;
-  if (ctor1 !== b.constructor) return false;
+  const whitelist = options?.keysToCheck;
+  const blacklist = options?.keysToIgnore;
 
-  const keys2 = Object.keys(b);
-  if (Object.keys(a).length !== keys2.length) return false;
+  const filterKeys = (keys: string[]) => {
+    if (whitelist) return keys.filter((key) => whitelist.includes(key));
+    if (blacklist) return keys.filter((key) => !blacklist.includes(key));
+    return keys;
+  };
 
-  const keys1 = Object.keys(a);
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < keys1.length; i++) {
-    const key = keys1[i];
-    if (!keys2.includes(key) || !areDeeplyEquals(a[key], b[key])) return false;
-  }
+  const keysA = filterKeys(Object.keys(a));
+  const keysB = filterKeys(Object.keys(b));
 
-  return true;
+  if (keysA.length !== keysB.length) return false;
+
+  return keysA.every((key) => keysB.includes(key) && areDeeplyEquals(a[key], b[key], options));
+
 };
 
 export default areDeeplyEquals;
