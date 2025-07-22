@@ -1,40 +1,81 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react';
-import getLocalStorage from '../../utilities/state/localStorage/getLocalStorage';
-import setLocalStorage from '../../utilities/state/localStorage/setLocalStorage';
-import removeLocalStorage from '../../utilities/state/localStorage/removeLocalStorage';
-import useOnSSR from '../prerendering/useOnSSR';
+import { useState, useEffect, useCallback } from 'react';
 
-type UseLocalStorageResponse<T> = [T, (value : T) => void, () => void]
+import {
+  LocalStorageHelper,
+  LocalStorageKeys,
+  localStorageListenerMap,
+} from '../../helpers/LocalStorageHelper';
 
-// Équivalent d'un useState pour gérer un état partagé d'une durée de vie infinie tant qu'on clear pas le cache ou qu'on ne vide pas le local storage.
-const useSharedLocalStorage = <T, >(key : string, valueIfUndefined : T) : UseLocalStorageResponse<T> => {
-  // Assure que vos variables sont différentes à travers vos différents sites, ex: test FR ou, test NC.
-  const moreUniqueKey = `${key}_${process.env.NODE_ENV.toUpperCase()}_PUT_YOUR_LOCALE_HERE`;
+const isSSR = () => typeof window === 'undefined';
 
-  const get = () :T => getLocalStorage(moreUniqueKey, valueIfUndefined);
-  const set = (value: T) : void => setLocalStorage(moreUniqueKey, value);
-  const remove = (): void => removeLocalStorage(moreUniqueKey);
+type Setter<T> = (value: T | ((val: T) => T)) => void;
+type UseSharedLocalStorageReturn<T> = readonly [T, Setter<T>];
 
-  const [value, setValue] = useState(get());
+function useSharedLocalStorage<T>(
+  key: LocalStorageKeys,
+  defaultValue: T,
+): UseSharedLocalStorageReturn<T> {
+  const readValue = useCallback((): T => LocalStorageHelper.get<T>(key, defaultValue), [key, defaultValue]);
 
-  useOnSSR({ onSSR: () => setValue(get()) });
+  const [, setStoredValue] = useState<T>(readValue);
 
-  const onStorageChange = (event: StorageEvent) => {
-    // Le stringify permet de gérer les types références comme les objets.
-    if (event.storageArea === localStorage && event.key === moreUniqueKey && event.newValue !== JSON.stringify(value)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      setValue(JSON.parse(event.newValue!) as T);
-    }
-  };
+  const setValue = useCallback<Setter<T>>(
+    (value) => {
+      if (isSSR()) return;
+      try {
+        const oldValue = readValue();
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        const newValue = typeof value === 'function' ? (value as Function)(oldValue) : value;
+
+        LocalStorageHelper.set(key, newValue);
+        setStoredValue(newValue);
+
+        localStorageListenerMap
+          .get(key)
+          ?.forEach((listener) => listener(newValue));
+      } catch (error) {
+        console.warn(`useSharedLocalStorage: failed to set "${key}"`, error);
+      }
+    },
+    [key, readValue],
+  );
 
   useEffect(() => {
-    window.addEventListener('storage', onStorageChange);
+    if (isSSR()) return;
 
-    return () => { window.removeEventListener('storage', onStorageChange); };
-  }, []);
+    const listeners = localStorageListenerMap.get(key) || new Set();
 
-  return [value, set, remove];
-};
+    listeners.add(setStoredValue);
+    localStorageListenerMap.set(key, listeners);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      listeners.delete(setStoredValue);
+
+      if (listeners.size === 0) localStorageListenerMap.delete(key);
+    };
+  }, [key]);
+
+  useEffect(() => {
+    if (isSSR()) return;
+
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === key) {
+        const newValue = event.newValue
+          ? JSON.parse(event.newValue)
+          : defaultValue;
+
+        setStoredValue(newValue);
+      }
+    };
+
+    window.addEventListener('storage', onStorage);
+
+    // eslint-disable-next-line consistent-return
+    return () => window.removeEventListener('storage', onStorage);
+  }, [key, defaultValue]);
+
+  return [LocalStorageHelper.get<T>(key, defaultValue), setValue] as const;
+}
 
 export default useSharedLocalStorage;

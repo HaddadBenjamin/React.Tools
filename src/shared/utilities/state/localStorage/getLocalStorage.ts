@@ -1,7 +1,8 @@
 import setLocalStorage from './setLocalStorage';
 
+const isSSR = () => typeof window === 'undefined';
 const getLocalStorage = <T>(key : string, valueIfUndefined : T) : T => {
-  if (typeof window === 'undefined') return valueIfUndefined;
+  if (!isSSR()) return valueIfUndefined;
 
   try {
     const item = window.localStorage.getItem(key);

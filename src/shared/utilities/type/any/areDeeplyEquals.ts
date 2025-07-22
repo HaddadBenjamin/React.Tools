@@ -1,5 +1,7 @@
 const areDeeplyEquals = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   a: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   b: any,
   options?: {
     keysToCheck?: string[];
