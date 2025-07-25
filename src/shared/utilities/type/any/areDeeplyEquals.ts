@@ -26,8 +26,7 @@ const areDeeplyEquals = (
 
   if (keysA.length !== keysB.length) return false;
 
-  return keysA.every((key) => keysB.includes(key) && areDeeplyEquals(a[key], b[key], options));
-
+  return keysA.every((key) => keysB.includes(key) && areDeeplyEquals(a[key], b[key], options));
 };
 
 export default areDeeplyEquals;

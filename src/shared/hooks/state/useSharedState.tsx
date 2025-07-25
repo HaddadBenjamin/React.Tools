@@ -1,64 +1,51 @@
-import { useEffect, useState } from 'react';
-import useOnSSR from '../prerendering/useOnSSR';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  SharedStateHelper,
+  SharedStateKey,
+} from '../../helpers/SharedStateHelper';
 
-type UseSharedStateResponse<T> = [T, (value : T) => void, () => void]
+const isSSR = () => typeof window === 'undefined';
 
-export class SharedState {
-  // eslint-disable-next-line semi
-  public static Cache = new Map<string, string>([])
-}
+type Setter<T> = (value: T | ((prev: T) => T)) => void;
+type UseSharedStateReturn<T> = readonly [T, Setter<T>];
 
-export const getShareState = <T, >(key : string, valueIfUndefined : T) : T => {
-  const value = SharedState.Cache.get(key);
+function useSharedState<T>(
+  key: SharedStateKey,
+  defaultValue: T,
+): UseSharedStateReturn<T> {
+  const get = useCallback(() => SharedStateHelper.get<T>(key, defaultValue), [key, defaultValue]);
 
-  if (value) return JSON.parse(value) as T;
+  const [, forceUpdate] = useState<T>(get);
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if (valueIfUndefined) { SharedState.Cache[key] = valueIfUndefined; }
-
-  return valueIfUndefined;
-};
-
-export const setShareState = <T, >(key : string, data : T) : void => {
-  const newValue = JSON.stringify(data);
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  SharedState.Cache[key] = newValue;
-  window.dispatchEvent(new StorageEvent('storage', { key, newValue, storageArea: null }));
-};
-
-export const removeShareState = (key: string) : void => {
-  SharedState.Cache.delete(key);
-  window.dispatchEvent(new StorageEvent('storage', { key, newValue: undefined, storageArea: null }));
-};
-
-// Équivalent d'un useState pour gérer un état partagé d'une durée d'une tabulation, comme Redux.
-const useSharedState = <T, >(key : string, valueIfUndefined : T) : UseSharedStateResponse<T> => {
-  const get = () : T => getShareState(key, valueIfUndefined);
-  const set = (value: T) : void => setShareState(key, value);
-  const remove = (): void => removeShareState(key);
-
-  const [value, setValue] = useState(get());
-
-  useOnSSR({ onSSR: () => setValue(get()) });
-
-  const onStorageChange = (event: StorageEvent) => {
-    // Le stringify permet de gérer les types références comme les objets.
-    if (event.storageArea === null && event.key === key && event.newValue !== JSON.stringify(value)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      setValue(JSON.parse(event.newValue!) as T);
-    }
-  };
+  const set = useCallback<Setter<T>>(
+    (value) => {
+      const prev = get();
+      const next = typeof value === 'function' ? (value as (v: T) => T)(prev) : value;
+      SharedStateHelper.set(key, next);
+    },
+    [get, key],
+  );
 
   useEffect(() => {
-    window.addEventListener('storage', onStorageChange);
+    if (isSSR()) return;
 
-    return () => { window.removeEventListener('storage', onStorageChange); };
-  }, []);
+    // eslint-disable-next-line no-underscore-dangle
+    const listeners = SharedStateHelper.__internal.listeners.get(key) || new Set();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    listeners.add(forceUpdate as any);
+    // eslint-disable-next-line no-underscore-dangle
+    SharedStateHelper.__internal.listeners.set(key, listeners);
 
-  return [value, set, remove];
-};
+    // eslint-disable-next-line consistent-return
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      listeners.delete(forceUpdate as any);
+      // eslint-disable-next-line no-underscore-dangle
+      if (listeners.size === 0) SharedStateHelper.__internal.listeners.delete(key);
+    };
+  }, [key]);
+
+  return [get(), set] as const;
+}
 
 export default useSharedState;

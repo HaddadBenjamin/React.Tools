@@ -1,21 +1,24 @@
 import { useState, useEffect, useCallback } from 'react';
 
 import {
-  LocalStorageHelper,
-  LocalStorageKeys,
-  localStorageListenerMap,
-} from '../../helpers/LocalStorageHelper';
+  SessionStorageHelper,
+  SessionStorageKeys,
+  sessionStorageListenerMap,
+} from '../../helpers/SessionStorageHelper';
 
 const isSSR = () => typeof window === 'undefined';
 
 type Setter<T> = (value: T | ((val: T) => T)) => void;
-type UseSharedLocalStorageReturn<T> = readonly [T, Setter<T>];
+type UseSharedSessionStorageReturn<T> = readonly [T, Setter<T>];
 
-function useSharedLocalStorage<T>(
-  key: LocalStorageKeys,
+function useSharedSessionStorage<T>(
+  key: SessionStorageKeys,
   defaultValue: T,
-): UseSharedLocalStorageReturn<T> {
-  const readValue = useCallback((): T => LocalStorageHelper.get<T>(key, defaultValue), [key, defaultValue]);
+): UseSharedSessionStorageReturn<T> {
+  const readValue = useCallback(
+    (): T => SessionStorageHelper.get<T>(key, defaultValue),
+    [key, defaultValue],
+  );
 
   const [, setStoredValue] = useState<T>(readValue);
 
@@ -27,14 +30,14 @@ function useSharedLocalStorage<T>(
         // eslint-disable-next-line @typescript-eslint/ban-types
         const newValue = typeof value === 'function' ? (value as Function)(oldValue) : value;
 
-        LocalStorageHelper.set(key, newValue);
+        SessionStorageHelper.set(key, newValue);
         setStoredValue(newValue);
 
-        localStorageListenerMap
+        sessionStorageListenerMap
           .get(key)
           ?.forEach((listener) => listener(newValue));
       } catch (error) {
-        console.warn(`useSharedLocalStorage: failed to set "${key}"`, error);
+        console.warn(`useSharedSessionStorage: failed to set "${key}"`, error);
       }
     },
     [key, readValue],
@@ -43,16 +46,15 @@ function useSharedLocalStorage<T>(
   useEffect(() => {
     if (isSSR()) return;
 
-    const listeners = localStorageListenerMap.get(key) || new Set();
+    const listeners = sessionStorageListenerMap.get(key) || new Set();
 
     listeners.add(setStoredValue);
-    localStorageListenerMap.set(key, listeners);
+    sessionStorageListenerMap.set(key, listeners);
 
     // eslint-disable-next-line consistent-return
     return () => {
       listeners.delete(setStoredValue);
-
-      if (listeners.size === 0) localStorageListenerMap.delete(key);
+      if (listeners.size === 0) sessionStorageListenerMap.delete(key);
     };
   }, [key]);
 
@@ -60,7 +62,7 @@ function useSharedLocalStorage<T>(
     if (isSSR()) return;
 
     const onStorage = (event: StorageEvent) => {
-      if (event.key === key) {
+      if (event.storageArea === sessionStorage && event.key === key) {
         const newValue = event.newValue
           ? JSON.parse(event.newValue)
           : defaultValue;
@@ -75,7 +77,7 @@ function useSharedLocalStorage<T>(
     return () => window.removeEventListener('storage', onStorage);
   }, [key, defaultValue]);
 
-  return [LocalStorageHelper.get<T>(key, defaultValue), setValue] as const;
+  return [SessionStorageHelper.get<T>(key, defaultValue), setValue] as const;
 }
 
-export default useSharedLocalStorage;
+export default useSharedSessionStorage;
